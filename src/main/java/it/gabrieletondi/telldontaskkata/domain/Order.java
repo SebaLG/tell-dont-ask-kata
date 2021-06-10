@@ -4,20 +4,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Order {
-    private BigDecimal total;
     private String currency;
     private List<OrderItem> items;
     private BigDecimal tax;
     private OrderStatus status;
     private int id;
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
 
     public String getCurrency() {
         return currency;
@@ -47,9 +38,6 @@ public class Order {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
 
     public int getId() {
         return id;
@@ -57,5 +45,26 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    /* REFACTORED */
+    public void approve() {
+        this.status = OrderStatus.APPROVED;
+    }
+
+    public void reject() {
+        this.status = OrderStatus.REJECTED;
+    }
+
+    public void shipped() {
+        this.status = OrderStatus.SHIPPED;
+    }
+
+    public void created() {
+        this.status = OrderStatus.CREATED;
+    }
+
+    public BigDecimal getTotal() {
+        return items.stream().map(value -> value.getProduct().getPrice()).reduce(BigDecimal::add).orElseThrow(NullPointerException::new);
     }
 }
